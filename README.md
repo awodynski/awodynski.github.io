@@ -1,9 +1,9 @@
-## About Me
+# Starter kit for [Alembic](https://alembic.darn.es/)
 
-I am a quantum chemistry expert with over 10 years of experience driving innovation in computational methods and density functional theory. My passion for developing advanced hybrid functionals is fueled by a deep interest in integrating artificial intelligence with classical quantum chemical methods. My work not only bridges the gap between theory and practice but also paves the way for groundbreaking solutions in both academia and industry.
+This is a very simple starting point if you wish to use Alembic [as a Jekyll theme gem](https://alembic.darn.es/#as-a-jekyll-theme) or as a [GitHub Pages remote theme](https://github.com/daviddarnes/alembic-kit/tree/remote-theme) (see `remote-theme` branch).
 
-## Professional Experience
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/daviddarnes/alembic-kit)
 
-At Technische Universität Berlin, I have been immersed in pioneering research on neural network-based local mixing functions tailored for hybrid functionals. Working at the intersection of machine learning and quantum chemistry, I have developed the LH24n-D4 functional, which significantly reduces errors in self-consistent field calculations. This role has allowed me to seamlessly integrate modern AI techniques with established quantum-chemical codes, mentoring emerging talents and collaborating across disciplines to push the boundaries of computational science.
-Earlier in my career, as a Research Assistant at the Institute of Nuclear Chemistry and Technology in Poland, I focused on the theoretical aspects of actinide and lanthanide selectivity using advanced computational models. During my PhD at the University of Warsaw, I designed innovative computational protocols for nuclear magnetic resonance studies of transition metal compounds and managed laboratory sessions where I had the privilege of guiding and inspiring graduate students.
-    
+or
+
+**[Download the GitHub Pages kit](https://github.com/daviddarnes/alembic-kit/archive/remote-theme.zip)**
