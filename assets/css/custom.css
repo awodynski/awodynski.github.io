@@ -1,0 +1,6 @@
+/* Zmiana koloru tekstu w nagłówku na biały */
+.site-title,
+.site-title a,
+.site-description {
+  color: #ffffff !important;
+}
