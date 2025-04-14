@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Artur Wodyński Portfolio</title>
+
+  <!-- External libraries -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+  <style>
+    /* RESET & BASE STYLES */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f0f0f0;
+      color: #333;
+    }
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    /* NAVIGATION BAR */
+    .nav-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: #333;
+      padding: 1em 2em;
+      display: flex;
+      justify-content: center;
+      gap: 2em;
+      z-index: 1000;
+    }
+    .nav-left {
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+    }
+    .nav-wrapper a {
+      color: #f0f0f0;
+      font-size: 1rem;
+      text-decoration: none;
+      font-weight: 500;
+      transition: transform 0.2s ease;
+    }
+    .nav-wrapper a:hover {
+      transform: scale(1.1);
+    }
+    .nav-wrapper a.active {
+      font-weight: bold;
+      color: #ffffff;
+    }
+
+    @media (min-width: 769px) {
+      .nav-wrapper a.active {
+        border-bottom: 2px solid #f0f0f0;
+      }
+    }
+
+    .menu-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 2em;
+      color: #f0f0f0;
+      cursor: pointer;
+      z-index: 1101;
+      display: none;
+    }
+
+    /* HAMBURGER ICON (MOBILE) */
+    .hamburger {
+      display: none;
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      cursor: pointer;
+      z-index: 1100;
+      width: 30px;
+      height: 25px;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .hamburger div {
+      height: 4px;
+      background: #f0f0f0;
+      border-radius: 2px;
+    }
+
+    @media (max-width: 768px) {
+      .hamburger {
+        display: flex;
+      }
+
+      .nav-wrapper {
+        display: none;
+        position: fixed;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.95);
+        padding-top: 100px;
+        z-index: 1000;
+      }
+
+      .nav-wrapper.show {
+        display: flex;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(6px);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+      }
+
+      .nav-wrapper a {
+        display: block;
+        font-size: 1em;
+        margin: 10px -60px;
+        width: 100%;
+        text-align: right;
+      }
+
+      .menu-close {
+        display: block;
+      }
+    }
+
+    /* HEADER */
+    header {
+      background: url('header.jpg') center/cover no-repeat;
+      padding: 80px 20px 180px;
+      position: relative;
+      text-align: center;
+      color: #f0f0f0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-bottom: 100px;
+    }
+    header h1 {
+      font-size: 3em;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    header p {
+      font-size: 1.3em;
+      opacity: 0.95;
+    }
+
+    .profile-pic {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 6px solid #f0f0f0;
+      transition: transform 0.3s ease;
+      position: absolute;
+      left: 50%;
+      top: calc(60%);
+      transform: translateX(-50%);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .profile-pic:hover {
+      transform: translateX(-50%) scale(1.08);
+    }
+
+    /* MAIN CONTAINER & SECTIONS */
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 2em auto;
+    }
+
+    section {
+      background: #fff;
+      padding: 2em;
+      margin-bottom: 2em;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    section h2 {
+      margin-bottom: 0.5em;
+      font-size: 1.8em;
+      border-bottom: 2px solid #eaeaea;
+      padding-bottom: 0.5em;
+    }
+    section p {
+      font-size: 1.1em;
+      line-height: 1.7;
+      color: #444;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    /* FADE-IN ANIMATION */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.6s ease-out;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* PROJECT MODAL */
+    #project-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    #modal-content {
+      background: #f0f0f0;
+      padding: 3em 2em 2em 2em;
+      border-radius: 8px;
+      width: 80%;
+      max-width: 2000px;
+      position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    #modal-close {
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      font-size: 1.5em;
+      cursor: pointer;
+      color: #888;
+    }
+    #modal-close:hover {
+      color: #333;
+    }
+
+    /* INFOGRAPHICS */
+    .infographics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1em;
+      justify-content: space-around;
+    }
+    .infographic {
+      flex: 0 1 calc(50% - 1em);
+      min-width: 250px;
+      background: #fff;
+      border-radius: 8px;
+      padding: 1em;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      transition: all 0.3s ease-in-out;
+    }
+    .infographic:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+    }
+    .infographic img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+      margin-bottom: 0.5em;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    .infographic img:hover {
+      transform: scale(1.02);
+    }
+
+    /* CV & PUBLICATIONS MODALS */
+    .cv-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .cv-modal-content {
+      background: #fff;
+      padding: 2em;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 800px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    }
+    .cv-close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 2em;
+      cursor: pointer;
+    }
+    #cv-pdf-container canvas {
+      width: 100%;
+      height: auto;
+      margin-bottom: 1em;
+    }
+
+      /* Publication styles */
+      #pub-list ul {
+      list-style: none;
+      padding: 0;
+      margin: 1em 0;
+    }
+
+
+    #pub-list li {
+      padding: 1em;
+      border-radius: 6px;
+      background-color: #f9f9f9;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+      margin-bottom: 1em;
+      display: flex;
+      align-items: flex-start;
+    }
+
+    #pub-list a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    #pub-list a:hover {
+      color: #333;
+      text-decoration: underline;
+    }
+
+    /* Adjust modal content for publications */
+    #pub-modal .cv-modal-content {
+      line-height: 1.6;
+      padding: 2.5em;
+    }
+
+    #pub-list li i {
+      margin-right: 0.75em;
+      font-size: 1.2em;
+      color: #515151;
+      margin-top: 0.1em;
+    }
+
+    /* DOWNLOAD / LINK STYLES */
+    .download-link {
+      background-color: #333;
+      color: #f0f0f0;
+      font-weight: 500;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      padding: 0.5em 1em;
+      border-radius: 5px;
+      text-decoration: none;
+      display: inline-block;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+    .download-link:hover {
+      background-color: #333;
+      color: #f0f0f0;
+      transform: scale(1.05);
+      box-shadow: 0 4px 10px rgba(0, 122, 204, 0.3);
+    }
+
+    section a {
+      display: inline-block;
+      color: #333;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: all 0.2s ease;
+    }
+    section a:hover {
+      border-bottom: 2px solid #333;
+      transform: translateY(-2px);
+    }
+
+    /* SKILLS */
+    .skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 1em;
+    }
+    .skills-list span {
+      background: #eee;
+      color: #333;
+      padding: 0.5em 1em;
+      border-radius: 20px;
+      font-size: 0.95em;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    /* FOOTER */
+    footer {
+      background: #333;
+      color: #fff;
+      text-align: center;
+      padding: 1em 0;
+    }
+    .social-links {
+      margin-bottom: 0.5em;
+    }
+    .social-links a {
+      color: #f0f0f0;
+      margin: 0 0.5em;
+      text-decoration: none;
+      font-size: 1.4em;
+      display: inline-block;
+      transition: transform 0.3s ease, color 0.3s ease, opacity 0.3s ease;
+    }
+    .social-links a:hover {
+      transform: scale(1.3);
+      opacity: 0.9;
+      color: #ffffff;
+    }
+
+    /* TOOLTIPS */
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+      color: #444;
+      border-bottom: 1px dashed #555;
+      transition: color 0.2s ease;
+    }
+    .tooltip:hover {
+      color: #000;
+    }
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: max-content;
+      max-width: 300px;
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 0.5em 1em;
+      position: absolute;
+      z-index: 9999;
+      bottom: 130%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      font-size: 0.9em;
+    }
+    .tooltip .tooltiptext::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 6px;
+      border-style: solid;
+      border-color: #333 transparent transparent transparent;
+    }
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <!-- NAV BAR -->
+  <div class="nav-wrapper">
+    <span class="menu-close" onclick="toggleMenu()" aria-label="Close navigation menu">×</span>
+    <div class="nav-left">
+      <a href="#home">Home</a>
+      <a href="#primer">Quantum Intro</a>
+      <a href="#projects">Projects</a>
+      <a href="#about">About Me</a>
+      <a href="#" onclick="openCV()">CV</a>
+      <a href="#" onclick="openPub()">Publications</a>
+    </div>
+  </div>
+  <div class="hamburger" onclick="toggleMenu()">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+
+  <!-- HEADER -->
+  <header>
+    <h1>Artur Wodyński</h1>
+    <p>Quantum Chemistry Expert | DFT &amp; Machine Learning</p>
+    <img
+      src="headshot_flat.jpg"
+      alt="Artur Wodyński"
+      class="profile-pic"
+      onclick="document.getElementById('about').scrollIntoView({ behavior: 'smooth' });"
+      style="cursor: pointer;"
+    />
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <div class="container">
+    <!-- HOME SECTION -->
+    <section id="home" class="fade-in">
+      <h2>Welcome</h2>
+      <p>
+        Hi, I’m Artur Wodyński, a quantum chemist specializing in density functional theory
+        and machine-learning-enhanced methods. I combine deep theoretical knowledge with
+        modern AI techniques to create next-generation computational tools. Welcome to my page.
+      </p>
+    </section>
+
+    <!-- QUANTUM INTRO SECTION -->
+    <section id="primer" class="fade-in">
+      <h2>Quantum Chemistry – A Quick Primer</h2>
+      <p>
+        If you’ve landed on this page, you’re probably familiar with machine learning, but
+        not necessarily with quantum chemistry. Here’s a quick intro to help you get oriented.
+      </p>
+      <p>
+        Quantum chemistry uses quantum mechanics to model how electrons behave in molecules.
+        A key challenge is describing how electrons interact—this involves two effects:
+        <strong>exchange</strong> (from quantum antisymmetry) and <strong>correlation</strong>
+        (how electrons avoid each other beyond simple repulsion).
+      </p>
+      <p>
+        There are two main approaches. <strong>Wavefunction theory (WFT)</strong> starts with
+        <strong>Hartree–Fock</strong>, which handles exchange exactly but neglects correlation.
+        This can be corrected using <strong>MP2/PT2</strong>, a cost-efficient perturbative method.
+        <strong>Density functional theory (DFT)</strong>, in contrast, treats both exchange
+        and correlation together, but only approximately, since the exact formula is unknown.
+      </p>
+      <p>
+        Each method has trade-offs. To combine their strengths, researchers began mixing them.
+        <strong>Global hybrids</strong>, introduced by Axel Becke, combine Hartree–Fock exchange
+        with DFT and became widely used across molecular science. Newer developments include
+        <strong>local hybrids</strong>, where the mixing varies in space, and
+        <strong>double hybrids</strong>, which also integrate MP2/PT2 for improved accuracy.
+      </p>
+    </section>
+
+    <!-- PROJECTS SECTION -->
+    <section id="projects" class="fade-in">
+      <h2>Selected Projects</h2>
+      <div class="infographics">
+        <div class="infographic">
+          <img src="TOC_nLMF.jpg" alt="Neural Network LMF TOC" />
+        </div>
+        <div class="infographic">
+          <img src="TOC_LDH.jpg" alt="Local Double Hybrids TOC" />
+        </div>
+        <div class="infographic">
+          <img src="TOC_wLH25tdE.png.jpg" alt="wLH25tdE TOC" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section id="about" class="fade-in">
+      <h2>About me</h2>
+      <p>
+        I earned my PhD in Chemistry from the University of Warsaw, where I specialized in
+        computational methods for nuclear magnetic resonance of transition metal compounds.
+        Since then, I have been deeply engaged in the development of novel functionals within DFT,
+        particularly local hybrids. Currently, I work as a researcher at Technische Universität
+        Berlin, where my research centers on creating new quantum chemical models and functionals
+        that combine classical physical insight with machine-learning innovations.
+      </p>
+      <p>
+        My scientific approach is guided by a desire to make functionals more transparent,
+        customizable, and physically robust. Rather than rely on purely black-box models,
+        I focus on designs that incorporate human-guided structure with machine-optimized components.
+        I’m also passionate about mentoring young scientists and collaborating across disciplines.
+      </p>
+      <p>
+        I have authored over 30 peer-reviewed publications, including contributions that pushed
+        the boundaries of local hybrid functionals, addressed strong correlation effects, and
+        introduced new ways of applying neural networks to quantum chemistry.
+      </p>
+    </section>
+
+    <!-- SKILLS & TECHNOLOGIES -->
+    <section id="skills" class="fade-in">
+      <h2>Skills &amp; Technologies</h2>
+      <div class="skills-list">
+        <span>DFT</span>
+        <span>Quantum Chemistry</span>
+        <span>Python</span>
+        <span>Fortran</span>
+        <span>TensorFlow</span>
+        <span>LaTeX</span>
+        <span>SCF Algorithms</span>
+        <span>Neural Networks</span>
+      </div>
+    </section>
+  </div>
+
+  <!-- PROJECT MODAL -->
+  <div id="project-modal" style="display:none;">
+    <div id="modal-content">
+      <span id="modal-close">&times;</span>
+      <div id="modal-text">
+        <h2>Project Title</h2>
+        <p>This is a placeholder for the project description. You can customize this content per project image.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CV MODAL -->
+  <div id="cv-modal" class="cv-modal" style="display:none;">
+    <div class="cv-modal-content">
+      <span class="cv-close" onclick="closeCV()">×</span>
+      <a class="download-link" href="cv.pdf" download>📄 Download PDF</a>
+      <div id="cv-pdf-container"></div>
+    </div>
+  </div>
+
+  <!-- PUBLICATIONS MODAL -->
+  <div id="pub-modal" class="cv-modal" style="display:none;">
+    <div class="cv-modal-content">
+      <span class="cv-close" onclick="closePub()">×</span>
+      <h2>Selected Publications</h2>
+      <div id="pub-list">
+        <ul>
+          <li><i class="fas fa-book-open"></i> <a href="https://doi.org/10.1016/j.cplett.2025.142048" target="_blank">An evaluation of local double hybrid density functionals</a></li>
+          <li><i class="fas fa-book-open"></i> <a href="https://doi.org/10.1021/acs.jctc.4c01503" target="_blank">Data-Driven Improvement of Local Hybrid Functionals: Neural-Network-Based Local Mixing Functions and Power-Series Correlation Functionals</a></li>
+          <li><i class="fas fa-book-open"></i> <a href="https://doi.org/10.1063/5.0233312" target="_blank">Suppressing the gauge problem in local hybrid functionals without a calibration function: The choice of local mixing function</a></li>
+          <li><i class="fas fa-book-open"></i> <a href="https://doi.org/10.1021/acs.accounts.4c00209" target="_blank">Toward the next generation of density functionals: Escaping the zero-sum game by using the exact-exchange energy density</a></li>
+          <li><i class="fas fa-book-open"></i> <a href="https://doi.org/10.1021/acs.jctc.3c00877" target="_blank">Range-separated local hybrid functionals with small fractional-charge and fractional-spin errors: escaping the zero-sum game of DFT functionals</a></li>
+        </ul>
+          <a class="download-link" style="color: #f0f0f0;" href="https://scholar.google.pl/citations?user=Lwv2toCKkx8C&hl=en" target="_blank">View full profile on Google Scholar</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="social-links">
+      <a href="https://www.linkedin.com/in/artur-wodyński-b3195996" target="_blank" aria-label="LinkedIn">
+        <i class="fab fa-linkedin"></i>
+      </a>
+      <a href="https://github.com/awodynski" target="_blank" aria-label="GitHub">
+        <i class="fab fa-github"></i>
+      </a>
+      <a href="mailto:artur.m.wodynski@email.com" aria-label="Email">
+        <i class="fas fa-envelope"></i>
+      </a>
+    </div>
+    <p>&copy; 2025 Artur Wodyński. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const projectData = {
+      "TOC_nLMF.jpg": {
+        html: `
+    <h2 style="margin-bottom: 0.5em;">Training Local Hybrid Functionals</h2>
+    <h4 style="margin-top: 1em;">Overview</h4>
+    <p style="margin-bottom: 1em; line-height: 1.8; letter-spacing: 0.3px;">
+      This project applies machine learning to a central problem in computational chemistry: improving the accuracy of 
+      density functional theory (DFT), a widely used method for simulating the electronic structure of molecules and 
+      materials. Traditional DFT relies on approximations called exchange-correlation (XC) functionals, which often 
+      strike a trade-off between accuracy and computational efficiency. In this project, we focused on a modern family 
+      of these approximations—so-called local hybrid functionals—and replaced part of the functional design with a 
+      trained neural network.
+    </p>
+    <h4 style="margin-top: 1em;">ML Application</h4>
+    <p style="margin-bottom: 1em; line-height: 1.8; letter-spacing: 0.3px;">
+      The key innovation was using a shallow neural network to model a scalar real-space function, known as the local 
+      mixing function (LMF), which determines how much 
+      <span class="tooltip">exact exchange<span class="tooltiptext">Exchange energy taken from wavefunction (Hartree–Fock) theory, partially incorporated into hybrid DFT</span></span> 
+      is used at different spatial positions within a molecule. This function typically follows a fixed analytic form. 
+      By training it instead as a neural network (dubbed “n-LMF”), we allowed it to adapt to patterns in quantum-chemical 
+      data without hand-coded constraints.
+    </p>
+    <p style="margin-bottom: 1em; line-height: 1.8; letter-spacing: 0.3px;">
+      The model was constructed as a 3-layer Multi-Layer Perceptron (MLP) using TensorFlow, with 7 physics-based input 
+      features derived from 
+      <span class="tooltip">meta-GGA<span class="tooltiptext">A class of DFT approximations (rung 4) that incorporates both electron density, its gradient, and the kinetic energy density</span></span> 
+      quantities (e.g., spin-resolved electron densities, gradients and kinetic energy densities). A differentiable 
+      GELU activation function was used to ensure smooth integration into the self-consistent field 
+      (<span class="tooltip">SCF<span class="tooltiptext">An iterative procedure in quantum chemistry that solves for the electron density or wavefunction to self-consistency</span></span>) loop 
+      of DFT software. Importantly, the network was trained to output values in the [0, 1] range using a sigmoid output, 
+      aligning with the physical interpretation of the LMF.
+    </p>
+    <p style="margin-bottom: 1em; line-height: 1.8; letter-spacing: 0.3px;">
+      Training was done on energy differences from two benchmark datasets 
+      (<span class="tooltip">W4-17<span class="tooltiptext">High-accuracy quantum-chemical benchmark set for atomization energies of small molecules</span></span> and 
+      <span class="tooltip">BH76<span class="tooltiptext">Barrier Heights for 76 chemical reactions, widely used to test DFT performance</span></span>), 
+      focusing on ~300 atomization energies and reaction barrier heights. The training process used a loss function 
+      based on the mean absolute error of predicted reaction energies.
+    </p>
+    <figure style="margin-bottom: 1em;">
+      <img src="nLMF_diagram.jpg" alt="Neural Network LMF Graphic" style="width: 100%; max-width: 600px; height: auto; border-radius: 6px; margin: 0 auto 0.5em; display: block;">
+      <figcaption style="text-align: center; font-size: 0.9em; color: #666;">Architecture of neural network model in LH24n functional</figcaption>
+    </figure>
+
+    <h4 style="margin-top: 1em;">Validation & Results</h4>
+    <p style="margin-bottom: 1em; line-height: 1.8; letter-spacing: 0.3px;">
+      The resulting functional, named LH24n-B95-D4, achieved state-of-the-art performance on the <span class="tooltip">
+  GMTKN55
+  <span class="tooltiptext">
+    A benchmark suite of 55 datasets covering thermochemistry, kinetics, noncovalent interactions, and conformers—used to assess the accuracy and generality of quantum chemical methods.
+  </span>
+</span> benchmark 
+      (∼1500 chemical reactions), lowering the weighted error metric 
+      <span class="tooltip">WTMAD-2<span class="tooltiptext">Weighted Total Mean Absolute Deviation 2, used to assess DFT functional performance across GMTKN55</span></span>       to 3.5 kcal/mol—approximately 1 kcal/mol better than the best-performing human-designed local hybrid to date. 
+      Notably, this was accomplished without relying on opaque deep networks and while maintaining full interpretability 
+      of the trained LMF.
+    </p>
+    <p style="margin-bottom: 1em; line-height: 1.8; letter-spacing: 0.3px;">
+      We also introduced a novel B97c-style power-series correlation functional and showed that its combination with 
+      the n-LMF improved generalization on complex data, including noncovalent interactions (WTMAD-2 about 3.1 kcal/mol). 
+      Finally, the method was tested on challenging organometallic reactions, with reasonable transferability.
+    </p>
+    <figure style="margin-bottom: 1em;">
+      <img src="nLMF.jpg" alt="Neural Network LMF Shape" style="width: 100%; max-width: 600px; height: auto; border-radius: 6px; margin: 0 auto 0.5em; display: block;">
+      <figcaption style="text-align: center; font-size: 0.9em; color: #666;">Visualisation of trained nLMF against human-designed t-LMF</figcaption>
+    </figure>
+
+    <h4 style="margin-top: 1em;">Technical Achievements</h4>
+    <ul style="margin-left: 1.5em; margin-bottom: 1em; line-height: 1.9;">
+      <li>Developed a portable Python–Fortran pipeline: The NN was trained in Python and then its weights were exported into the Turbomole quantum chemistry package for high-performance self-consistent calculations.</li>
+      <li>Achieved smooth integration into SCF loops, thanks to careful selection of differentiable activations and feature normalization.</li>
+      <li>Demonstrated that a shallow network (~3700 parameters) trained on limited data was sufficient to generalize across a large chemistry benchmark, outperforming some black-box deep-learning approaches while remaining interpretable.</li>
+    </ul>
+    <h4 style="margin-top: 1em;">Collaborators</h4>
+    <p style="margin-bottom: 1em; line-height: 1.8; letter-spacing: 0.3px;">
+        This project was developed in collaboration with Martin Kaupp and Kilian Glodny.
+    </p>
+    <h4 style="margin-top: 1em;">Takeaway</h4>
+    <p style="line-height: 1.8; letter-spacing: 0.3px;">
+      This project demonstrates that hybridizing domain-specific functional design with targeted, compact neural networks 
+      offers a compelling route for scientific ML—combining interpretability, accuracy, and robustness in high-stakes 
+      physical simulations.
+    </p>
+    <h4 style="margin-top: 1em;"> </h4>
+    <h4 style="margin-top: 1em;"> </h4>
+    Figures reproduced or adapted from the author’s publications under CC BY licenses.
+    <h4 style="margin-top: 1em;"> </h4>
+    <a href="https://doi.org/10.1021/acs.jctc.4c01503" target="_blank">
+    <i class="fas fa-book-open"></i> View publication
+    </a>
+  `
+      },
+      "TOC_LDH.jpg": {
+        html: `
+    <h2 style="margin-bottom: 0.5em;">Towards Local Double Hybrids</h2>
+    <h4 style="margin-top: 1em;">Overview</h4>
+    <p style="margin-bottom: 1em; line-height: 1.8; letter-spacing: 0.3px;">
+      This project extends recent advances in functional design by applying machine learning to the development of 
+      <span class="tooltip">rung-5<span class="tooltiptext">Fifth “rung” on Jacob’s Ladder of DFT, incorporating wavefunction-based correlation terms</span></span> 
+      density functional approximations (DFAs), specifically 
+      <span class="tooltip">range-separated local double hybrids (RSLDHs)<span class="tooltiptext">A rung-5 approach combining local hybrid exchange and second-order perturbation theory for higher accuracy</span></span>. 
+      These functionals combine position-dependent 
+  <span class="tooltip">exact exchange<span class="tooltiptext">Exchange energy taken from wavefunction (Hartree–Fock) theory, partially incorporated into hybrid DFT</span></span>       with 
+      <span class="tooltip">second-order perturbation theory (PT2)<span class="tooltiptext">A wavefunction-based correction (Møller–Plesset) on top of DFT</span></span> 
+      to achieve high accuracy in quantum chemistry. While 
+      <span class="tooltip">local hybrid functionals (rung 4)<span class="tooltiptext">Fourth “rung” on Jacob’s Ladder of DFT, combining semi-local terms with partial exact exchange</span></span> 
+      have already benefited from neural network-based local mixing functions (LMFs) (see <span class="tooltip" style="cursor: pointer; text-decoration: underline;" onclick="openProjectModal('TOC_nLMF.jpg')">Training Local Hybrid Functionals project</span>), this work is the first to incorporate such flexible, data-driven LMFs into the more advanced RSLDH framework.
+    </p>
+
+    <h4 style="margin-top: 1em;">ML Application</h4>
+    <p style="margin-bottom: 1em; line-height: 1.8; letter-spacing: 0.3px;">
+      We trained a shallow neural network (n-LMF) to model the spatially varying admixture of exact exchange used in RSLDHs. 
+      The model—a compact MLP with two hidden layers of 64 neurons each—takes as input spin densities, gradients, and 
+      kinetic energy densities from molecular grid points. A sigmoid output activation ensures the LMF remains within 
+      physically meaningful bounds.
+    </p>
+
+    <p style="margin-bottom: 1em; line-height: 1.8; letter-spacing: 0.3px;">
+      Importantly, attempts to use human-designed analytic forms for the LMF consistently failed in this context: 
+      optimizations either collapsed the LMF to a constant value—leading back to a global hybrid—or suppressed the 
+      perturbational PT2 correlation entirely, effectively reducing the functional back to a rung-4 model. This 
+      demonstrated the necessity of a more flexible, data-driven approach for capturing the position dependence of 
+      exchange in the presence of PT2.
+    </p>
+
+    <p style="margin-bottom: 1em; line-height: 1.8; letter-spacing: 0.3px;">
+      Training was done in the presence of 
+      <span class="tooltip">PT2<span class="tooltiptext">Second-order Møller–Plesset perturbation theory, a wavefunction-based correction</span></span> 
+      on energy differences from two benchmark datasets 
+          (<span class="tooltip">W4-17<span class="tooltiptext">High-accuracy quantum-chemical benchmark set for atomization energies of small molecules</span></span> and 
+      <span class="tooltip">BH76<span class="tooltiptext">Barrier Heights for 76 chemical reactions, widely used to test DFT performance</span></span>), 
+      focusing on ~300 atomization energies and reaction barrier heights. The training process used a loss function based 
+      on the mean absolute error of predicted reaction energies.
+    </p>
+
+    <figure style="margin-bottom: 1em;">
+      <img src="nLMF_LDH.jpg" alt="Neural Network LMF Graphic" style="width: 100%; max-width: 600px; height: auto; border-radius: 6px; margin: 0 auto 0.5em; display: block;">
+      <figcaption style="text-align: center; font-size: 0.9em; color: #666;">Visualisation of trained nLMF against human designed t-LMF</figcaption>
+    </figure>
+
+    <h4 style="margin-top: 1em;">Validation & Results</h4>
+    <p style="margin-bottom: 1em; line-height: 1.8; letter-spacing: 0.3px;">
+      The resulting functional achieved a 
+      <span class="tooltip">WTMAD-2<span class="tooltiptext">Weighted Total Mean Absolute Deviation 2, used to assess DFT functional performance across GMTKN55</span></span> 
+      of 1.88 kcal/mol on the full <span class="tooltip">
+  GMTKN55
+  <span class="tooltiptext">
+    A benchmark suite of 55 datasets covering thermochemistry, kinetics, noncovalent interactions, and conformers—used to assess the accuracy and generality of quantum chemical methods.
+  </span>
+</span> benchmark (∼1500 chemical reactions), matching or outperforming many state-of-the-art 
+      range-separated double hybrids. Training on W4-17 and BH76 showed that the network rapidly improved its performance 
+      within the first few hundred epochs, but later stages exhibited signs of overfitting. Specifically, while the 
+      training loss continued to decrease, the generalization performance on the independent GMTKN55 benchmark began 
+      to degrade beyond ∼800 epochs. This highlights the need for a more chemically diverse and representative training set 
+      —particularly including noncovalent interactions and larger systems—to avoid overtraining and enhance robustness.
+    </p>
+
+    <h4 style="margin-top: 1em;">Technical Achievements</h4>
+    <ul style="margin-left: 1.5em; margin-bottom: 1em; line-height: 1.9;">
+      <li>First neural RSLDH functional: Introduced a neural LMF into the double hybrid framework, previously unexplored in the literature.</li>
+      <li>Modular training pipeline: Neural weights trained in TensorFlow were seamlessly integrated into DFT post-processing tools.</li>
+      <li>Physically meaningful LMFs: The learned function mirrors known patterns, while maintaining high exact-exchange admixture appropriate for PT2-based functionals.</li>
+    </ul>
+    <h4 style="margin-top: 1em;">Collaborators</h4>
+    <p style="margin-bottom: 1em; line-height: 1.8; letter-spacing: 0.3px;">
+        This project was developed in collaboration with Martin Kaupp and Nora Kovacs.
+    </p>
+    <h4 style="margin-top: 1em;">Takeaway</h4>
+    <p style="line-height: 1.8; letter-spacing: 0.3px;">
+      This work shows that neural networks can effectively and interpretably extend the frontier of high-accuracy DFT
+      —now reaching into the demanding rung-5 class of functionals.
+    </p>
+    <h4 style="margin-top: 1em;"> </h4>
+    <h4 style="margin-top: 1em;"> </h4>
+    Figures reproduced or adapted from the author’s publications under CC BY licenses.
+    <h4 style="margin-top: 1em;"> </h4>
+    <a href="https://doi.org/10.1016/j.cplett.2025.142048" target="_blank">
+    <i class="fas fa-book-open"></i> View publication
+    </a>
+        `
+      },
+      "TOC_wLH25tdE.png.jpg": {
+        html: `
+          <h2>wLH25tdE Functional</h2>
+          <p>This project presents a new local hybrid functional designed with fractional charge and spin constraints. It delivers highly accurate results across the GMTKN55 database and avoids the zero-sum problem. Details soon.</p>
+        `
+      }
+    };
+
+    document.querySelectorAll('.infographic img').forEach(img => {
+      img.addEventListener('click', () => {
+        const src = img.getAttribute('src');
+        const data = projectData[src];
+        document.getElementById('project-modal').style.display = 'flex';
+        document.body.classList.add('modal-open');
+
+        if (data) {
+          document.getElementById('modal-text').innerHTML = data.html;
+        } else {
+          document.getElementById('modal-text').innerHTML = `
+            <h2>Project</h2>
+            <p>Description for this project is not available yet.</p>
+          `;
+        }
+      });
+    });
+
+    document.getElementById('modal-close').addEventListener('click', () => {
+      document.getElementById('project-modal').style.display = 'none';
+      document.body.classList.remove('modal-open');
+    });
+
+    function toggleMenu() {
+      const menu = document.querySelector('.nav-wrapper');
+      menu.classList.toggle('show');
+      document.body.classList.toggle('modal-open');
+    }
+
+    document.querySelectorAll('.nav-wrapper a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.querySelector('.nav-wrapper').classList.remove('show');
+      });
+    });
+
+    window.addEventListener('resize', () => {
+      const menu = document.querySelector('.nav-wrapper');
+      if (window.innerWidth > 768 && menu.classList.contains('show')) {
+        menu.classList.remove('show');
+      }
+    });
+
+    // HIGHLIGHT ACTIVE NAV LINK ON SCROLL
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-wrapper a');
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        const id = entry.target.getAttribute('id');
+        const link = document.querySelector(`.nav-wrapper a[href="#${id}"]`);
+        if (entry.isIntersecting) {
+          navLinks.forEach(l => l.classList.remove('active'));
+          if (link) link.classList.add('active');
+        }
+      });
+    }, {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.5
+    });
+
+    sections.forEach(section => observer.observe(section));
+
+    // FADE-IN SECTIONS
+    const fadeIns = document.querySelectorAll('.fade-in');
+    const fadeObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          fadeObserver.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.2
+    });
+
+    fadeIns.forEach(section => fadeObserver.observe(section));
+
+    // CV & PUBLICATIONS
+    function openCV() {
+      const modal = document.getElementById('cv-modal');
+      modal.style.display = 'flex';
+      const container = document.getElementById('cv-pdf-container');
+      if (container.childElementCount === 0) {
+        const url = 'cv.pdf';
+        pdfjsLib.getDocument(url).promise.then(pdf => {
+          for (let i = 1; i <= pdf.numPages; i++) {
+            pdf.getPage(i).then(page => {
+              const canvas = document.createElement('canvas');
+              const ctx = canvas.getContext('2d');
+              const viewport = page.getViewport({ scale: 2.5 });
+              canvas.width = viewport.width;
+              canvas.height = viewport.height;
+              container.appendChild(canvas);
+              page.render({ canvasContext: ctx, viewport });
+            });
+          }
+        });
+      }
+    }
+
+    function closeCV() {
+      document.getElementById('cv-modal').style.display = 'none';
+    }
+
+    function openPub() {
+      const modal = document.getElementById('pub-modal');
+      modal.style.display = 'flex';
+      const container = document.getElementById('pub-list');
+      if (container.innerHTML.includes('Loading')) {
+        fetch('https://export.arxiv.org/api/query?search_query=au:"Wodynski,A"&start=0&max_results=5')
+          .then(res => res.text())
+          .then(data => {
+            const parser = new DOMParser();
+            const xml = parser.parseFromString(data, "application/xml");
+            const entries = xml.getElementsByTagName("entry");
+            container.innerHTML = '';
+            for (let i = 0; i < entries.length; i++) {
+              const title = entries[i].getElementsByTagName("title")[0].textContent;
+              const link = entries[i].getElementsByTagName("id")[0].textContent;
+              const pub = document.createElement("p");
+              pub.innerHTML = `<a href="${link}" target="_blank">${title}</a>`;
+              container.appendChild(pub);
+            }
+          });
+      }
+    }
+
+    function closePub() {
+      document.getElementById('pub-modal').style.display = 'none';
+    }
+    
+    function openProjectModal(imageName) {
+      const data = projectData[imageName];
+      document.getElementById('project-modal').style.display = 'flex';
+      document.body.classList.add('modal-open');
+      if (data) {
+        document.getElementById('modal-text').innerHTML = data.html;
+      }
+    }
+  </script>
+</body>
+</html>
