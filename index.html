@@ -897,11 +897,12 @@
       document.body.classList.toggle('modal-open');
     }
 
-    document.querySelectorAll('.nav-wrapper a').forEach(link => {
-      link.addEventListener('click', () => {
-        document.querySelector('.nav-wrapper').classList.remove('show');
-      });
-    });
+  document.querySelectorAll('.nav-wrapper a').forEach(link => {
+  link.addEventListener('click', () => {
+    document.querySelector('.nav-wrapper').classList.remove('show');
+    document.body.classList.remove('modal-open'); // umożliwia przewijanie
+  });
+});
 
     window.addEventListener('resize', () => {
       const menu = document.querySelector('.nav-wrapper');
