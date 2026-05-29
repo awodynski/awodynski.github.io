@@ -317,6 +317,14 @@ color: var(--text);
     @media (max-width: 900px) {
       .grid-3 { grid-template-columns: 1fr; }
     }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    @media (max-width: 700px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
     .card {
       border-radius: 16px;
       border: 1px solid var(--stroke);
@@ -423,11 +431,25 @@ color: var(--text);
     }
 
     /* SKILLS */
+    .skills-group {
+      margin-bottom: 14px;
+    }
+    .skills-group:last-child {
+      margin-bottom: 0;
+    }
+    .skills-group h3 {
+      font-size: 0.98rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      text-transform: uppercase;
+      font-size: 0.82rem;
+    }
     .skills {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      margin-top: 8px;
     }
     .skill {
       padding: 8px 12px;
@@ -588,6 +610,7 @@ color: var(--text);
         <a href="#overview">Overview</a>
         <a href="#primer">Quantum Intro</a>
         <a href="#projects">Projects</a>
+        <a href="#collaborations">Collaborations</a>
         <a href="#about">About</a>
         <a href="#skills">Skills</a>
         <a href="#" onclick="openModal('pub-modal'); return false;">Publications</a>
@@ -612,6 +635,7 @@ color: var(--text);
         <a href="#overview" onclick="toggleMenu(false)">Overview</a>
         <a href="#primer" onclick="toggleMenu(false)">Quantum Intro</a>
         <a href="#projects" onclick="toggleMenu(false)">Projects</a>
+        <a href="#collaborations" onclick="toggleMenu(false)">Collaborations</a>
         <a href="#about" onclick="toggleMenu(false)">About</a>
         <a href="#skills" onclick="toggleMenu(false)">Skills</a>
         <a href="#" onclick="toggleMenu(false); openModal('pub-modal'); return false;">Publications</a>
@@ -630,14 +654,13 @@ color: var(--text);
         <div>
           <h1>Quantum Chemistry × Machine Learning</h1>
           <p class="tagline">
-            I build <b>physically grounded ML models</b> for density functional theory (DFT) and
-            deliver them as <b>robust scientific software</b>—from differentiable training pipelines to
-            high-performance implementations used in self-consistent calculations.
+            I build <b>physically grounded ML models</b> for density functional theory (DFT) and apply quantum chemistry to <b>real chemical problems</b>, from spectroscopy of heavy-element complexes to actinide separation. Method development and applied collaborations inform each other.
           </p>
 
           <div class="pill-row" aria-label="Highlights">
             <span class="pill"><span class="dot"></span> DFT / functional development</span>
             <span class="pill"><span class="dot"></span> Neural networks in SCF loops</span>
+            <span class="pill"><span class="dot"></span> Applied collaborations</span>
             <span class="pill"><span class="dot"></span> Python + Fortran + HPC</span>
           </div>
 
@@ -674,11 +697,11 @@ color: var(--text);
         <h2>Overview</h2>
         <p>
           DFT is a scalable electronic-structure method used to compute energies, structures, and reaction barriers across chemistry and materials. Its speed comes from approximations
-          (“functionals”)—and better functionals can make entire workflows more accurate.
-          My work combines <b>compact ML components</b> with <b>physics constraints</b> so models stay interpretable and stable.
+          (“functionals”) and better functionals can make entire workflows more accurate.
+          My work combines <b>compact ML components</b> with <b>physics constraints</b> so models stay interpretable and stable. Alongside method development, I apply quantum chemistry to real chemical problems through long-running experimental collaborations.
         </p>
 
-        <div class="grid-3">
+        <div class="grid-2">
           <div class="card">
             <h3>🔧 What I build</h3>
             <div>
@@ -718,6 +741,20 @@ color: var(--text);
               <li>Exporting NN weights to production codes</li>
               <li>Performance-aware data pipelines</li>
               <li>Reproducible benchmarking</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3>🔬 Applied collaborations</h3>
+            <div>
+              <span class="chip">Spectroscopy</span>
+              <span class="chip">Heavy elements</span>
+              <span class="chip">Experimentalists</span>
+            </div>
+            <ul class="bullets">
+              <li>First-principles support for experimental groups</li>
+              <li>Interpretation of NMR, EPR, IR spectra</li>
+              <li>Testing new functionals on real systems</li>
             </ul>
           </div>
         </div>
@@ -825,6 +862,68 @@ color: var(--text);
       </div>
     </section>
 
+    <!-- COLLABORATIONS -->
+    <section id="collaborations" class="fade-in">
+      <div class="sec-inner">
+        <h2>Working with experimentalists</h2>
+        <p>
+          Quantum chemistry is most useful when it answers a question that someone actually needs answered. Over the years I have contributed first-principles calculations to international collaborations across several spectroscopic and applied domains — helping interpret unexpected results, validate models against measurements, and rationalise structure–property relationships. Some of these projects also serve as testing ground for the new functionals developed in the <a href="#projects" style="color:var(--accent); font-weight:650;">method work above</a>.
+        </p>
+
+        <div class="project-grid">
+
+          <div class="project" data-collab="c_pnmr" role="button" tabindex="0">
+            <div class="project-body">
+              <div class="project-title">
+                <h3>Paramagnetic NMR of transition-metal complexes</h3>
+                <span class="hint">Open →</span>
+              </div>
+              <div class="project-desc">
+                <b>with Juha Vaara group, University of Oulu.</b> Hyperfine couplings, g-tensors, and paramagnetic chemical shifts of challenging open-shell systems including application of new local hybrid functionals to a Fe(V) bis(imido) complex where standard methods fail.
+              </div>
+            </div>
+          </div>
+
+          <div class="project" data-collab="c_matiso" role="button" tabindex="0">
+            <div class="project-body">
+              <div class="project-title">
+                <h3>Matrix-isolation IR spectroscopy of heavy-element fluorides</h3>
+                <span class="hint">Open →</span>
+              </div>
+              <div class="project-desc">
+                <b>with Sebastian Riedel group, FU Berlin.</b> Relativistic quantum-chemical calculations supporting identification of molecular iridium fluoride species in cryogenic noble-gas matrices, including spin–orbit-coupling effects in IrF<sub>5</sub>, IrF<sub>6</sub><sup>−</sup>, and M[IrF<sub>6</sub>] ion pairs.
+              </div>
+            </div>
+          </div>
+
+          <div class="project" data-collab="c_photo" role="button" tabindex="0">
+            <div class="project-body">
+              <div class="project-title">
+                <h3>Photophysics and EPR of organic radicals</h3>
+                <span class="hint">Open →</span>
+              </div>
+              <div class="project-desc">
+                <b>with Lambert and Würthner groups, Würzburg.</b> TD-DFT and quasi-relativistic calculations of excited states, spin–orbit coupling, and g-tensors in chalcogen-substituted perylene diimides and their radical anions — linking heavy-atom effects to observed intersystem-crossing rates and EPR signatures.
+              </div>
+            </div>
+          </div>
+
+          <div class="project" data-collab="c_actln" role="button" tabindex="0">
+            <div class="project-body">
+              <div class="project-title">
+                <h3>Actinide and lanthanide separation chemistry</h3>
+                <span class="hint">Open →</span>
+              </div>
+              <div class="project-desc">
+                <b>with Institute of Nuclear Chemistry and Technology, Warsaw.</b> Relativistic DFT (ZORA) studies of TODGA- and BTBP-type ligand complexes with Am(III) and Eu(III), supporting interpretation of selectivity in solvent-extraction processes relevant to nuclear-waste reprocessing.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
     <!-- ABOUT -->
     <section id="about" class="fade-in">
       <div class="sec-inner">
@@ -838,6 +937,9 @@ color: var(--text);
           I enjoy bridging theory and engineering: taking an idea from a clean model, through training and validation,
           to a reliable implementation that can run in production workflows.
         </p>
+        <p>
+          Alongside method work, I have spent years collaborating with experimental groups across Europe, applying quantum chemistry to spectroscopy, heavy-element chemistry, and separation problems. Both sides of the work feed each other: real chemical questions test the methods, and new methods open up problems that were previously out of reach.
+        </p>
       </div>
     </section>
 
@@ -845,26 +947,66 @@ color: var(--text);
     <section id="skills" class="fade-in">
       <div class="sec-inner">
         <h2>Skills</h2>
-        <div class="skills">
-          <span class="skill">DFT & functional design</span>
-          <span class="skill">Machine learning (TensorFlow)</span>
-          <span class="skill">Scientific Python</span>
-          <span class="skill">Fortran</span>
-          <span class="skill">HPC / SLURM</span>
-          <span class="skill">Benchmarking & reproducibility</span>
-          <span class="skill">SCF algorithms</span>
-          <span class="skill">LaTeX</span>
+
+        <div class="skills-group">
+          <h3>Quantum chemistry & methods</h3>
+          <div class="skills">
+            <span class="skill">DFT & functional design</span>
+            <span class="skill">Local hybrids / range-separated hybrids</span>
+            <span class="skill">Relativistic DFT (ZORA, X2C, ECPs)</span>
+            <span class="skill">Spin–orbit coupling</span>
+            <span class="skill">SCF algorithms</span>
+            <span class="skill">NMR / EPR property calculations</span>
+            <span class="skill">Bonding analysis (NBO, QTAIM)</span>
+            <span class="skill">Solvation (COSMO/PCM)</span>
+          </div>
         </div>
+
+        <div class="skills-group">
+          <h3>Machine learning</h3>
+          <div class="skills">
+            <span class="skill">Neural networks (TensorFlow)</span>
+            <span class="skill">Physics-informed ML</span>
+            <span class="skill">Feature engineering</span>
+            <span class="skill">Model interpretability</span>
+            <span class="skill">Benchmarking & reproducibility</span>
+          </div>
+        </div>
+
+        <div class="skills-group">
+          <h3>Applied chemistry domains</h3>
+          <div class="skills">
+            <span class="skill">Heavy-element chemistry</span>
+            <span class="skill">Transition-metal complexes</span>
+            <span class="skill">Paramagnetic NMR</span>
+            <span class="skill">Photophysics & EPR of radicals</span>
+            <span class="skill">Actinide / lanthanide separation</span>
+            <span class="skill">Matrix-isolation spectroscopy</span>
+          </div>
+        </div>
+
+        <div class="skills-group">
+          <h3>Software & tooling</h3>
+          <div class="skills">
+            <span class="skill">Scientific Python</span>
+            <span class="skill">Fortran</span>
+            <span class="skill">HPC / SLURM</span>
+            <span class="skill">PySCF · Turbomole · ORCA · ADF · Gaussian</span>
+            <span class="skill">Git · Linux · Bash</span>
+            <span class="skill">LaTeX</span>
+          </div>
+        </div>
+
       </div>
     </section>
 
     <!-- FOOTER -->
     <footer>
       <div class="footer-links">
-        <a href="https://www.linkedin.com/in/artur-wodyński-b3195996" target="_blank" rel="noreferrer">LinkedIn</a>
+        <a href="https://www.linkedin.com/in/artur-wodynski" target="_blank" rel="noreferrer">LinkedIn</a>
         <a href="https://github.com/awodynski" target="_blank" rel="noreferrer">GitHub</a>
         <a href="https://scholar.google.pl/citations?user=Lwv2toCKkx8C&hl=en" target="_blank" rel="noreferrer">Google Scholar</a>
-        <a href="mailto:artur.m.wodynski@email.com">Email</a>
+        <a href="mailto:artur.wodynski@email.com">Email</a>
       </div>
       <div>© 2025 Artur Wodyński</div>
     </footer>
@@ -897,6 +1039,10 @@ color: var(--text);
           <li><a href="https://doi.org/10.1016/j.cplett.2025.142048" target="_blank" rel="noreferrer">Evaluation of local double hybrids</a></li>
           <li><a href="https://doi.org/10.1063/5.0233312" target="_blank" rel="noreferrer">Suppressing the gauge problem in local hybrids</a></li>
           <li><a href="https://doi.org/10.1021/acs.accounts.4c00209" target="_blank" rel="noreferrer">Escaping the zero‑sum game with exact‑exchange energy density</a></li>
+          <li><a href="https://doi.org/10.1039/D5CP02544C" target="_blank" rel="noreferrer">Paramagnetic NMR of a Fe(V) bis(imido) complex (with Vaara group)</a></li>
+          <li><a href="https://doi.org/10.1002/chem.202401015" target="_blank" rel="noreferrer">IrF<sub>5</sub><sup>−</sup>, IrF<sub>6</sub><sup>−</sup> anions and ion pairs (with Riedel group)</a></li>
+          <li><a href="https://doi.org/10.1039/D2CP02723B" target="_blank" rel="noreferrer">Chalcogen-substituted PDI radical anions (with Lambert and Würthner)</a></li>
+          <li><a href="https://doi.org/10.1039/C4DT02657H" target="_blank" rel="noreferrer">TODGA / BTBP selectivity in actinide/lanthanide separation</a></li>
         </ul>
 
         <div class="link-row">
@@ -1039,8 +1185,94 @@ color: var(--text);
       },
     };
 
+    // --- COLLABORATION DATA ---
+    const collabData = {
+      c_pnmr: {
+        title: "Paramagnetic NMR with the Vaara group, Oulu",
+        html: `
+          <p>First-principles calculation of hyperfine couplings, g-tensors, and paramagnetic NMR chemical shifts of open-shell transition-metal complexes — systems where standard DFT often suffers from spin contamination and where method choice matters strongly.</p>
+
+          <h3>Recent highlight</h3>
+          <ul>
+            <li>Application of new strong-correlation-corrected local hybrid functionals to a freshly synthesised Fe(V) bis(imido) complex.</li>
+            <li>Predicted and compared paramagnetic <sup>1</sup>H chemical shifts against experiment; provided predicted <sup>13</sup>C shifts for systems not yet measured.</li>
+            <li>Identified spin-density spill-over to imido ligands as the failure mode of conventional hybrid functionals on this system.</li>
+          </ul>
+
+          <h3>Earlier work</h3>
+          <ul>
+            <li>Spin-symmetry breaking and hyperfine couplings in transition-metal complexes — systematic re-examination using new exact-exchange-energy-density functionals.</li>
+          </ul>
+
+          <div class="link-row">
+            <a href="https://doi.org/10.1039/D5CP02544C" target="_blank" rel="noreferrer">PCCP 2025 (Fe(V))</a>
+            <a href="https://doi.org/10.1021/acs.jctc.3c01422" target="_blank" rel="noreferrer">JCTC 2024 (HFC review)</a>
+          </div>
+        `
+      },
+      c_matiso: {
+        title: "Matrix-isolation IR with the Riedel group, FU Berlin",
+        html: `
+          <p>Combined experimental matrix-isolation IR spectroscopy and relativistic quantum-chemical calculations on heavy-element fluoride species — small, reactive molecules studied in cryogenic noble-gas matrices.</p>
+
+          <h3>What I contributed</h3>
+          <ul>
+            <li>Two-component quasirelativistic DFT calculations with explicit spin–orbit coupling.</li>
+            <li>Structural and vibrational assignment of IrF<sub>5</sub>, IrF<sub>6</sub><sup>−</sup>, and M[IrF<sub>6</sub>] ion pairs (M = Na, K, Rb, Cs).</li>
+            <li>Predicted absence of IrF<sub>7</sub> species consistent with experimental observations.</li>
+            <li> Quantum-chemical calculations on PtF6 and PtF4
+          </ul>
+
+          <div class="link-row">
+            <a href="https://doi.org/10.1002/chem.202401015" target="_blank" rel="noreferrer">Chem. Eur. J. 2024 (IrF anions and ion pairs)</a>
+            <a href="https://doi.org/10.1002/chem.202104005" target="_blank" rel="noreferrer">Chem. Eur. J. 2022 (IrF<sub>n</sub> series)</a>
+            <a href="https://doi.org/10.1002/chem.202102055" target="_blank" rel="noreferrer">Chem. Eur. J. 2021 (PtF<sub>n</sub> series)</a>
+          </div>
+        `
+      },
+      c_photo: {
+        title: "Photophysics and EPR with the Lambert and Würthner groups, Würzburg",
+        html: `
+          <p>Computational support for a combined photophysical and EPR study of chalcogen bay-substituted perylene diimides (PDIs) and their radical anions — investigating how heavy-atom substitution (O, S, Se, Te) tunes spin–orbit coupling, intersystem crossing, and g-tensor anisotropy.</p>
+
+          <h3>What I contributed</h3>
+          <ul>
+            <li>Quasirelativistic g-tensor calculations on radical anions, linking computed values to EPR observations.</li>
+          </ul>
+
+          <div class="link-row">
+            <a href="https://doi.org/10.1039/D2CP02723B" target="_blank" rel="noreferrer">PCCP 2022 (PDIs and radical anions)</a>
+          </div>
+        `
+      },
+      c_actln: {
+        title: "Actinide and lanthanide separation, Institute of Nuclear Chemistry and Technology, Warsaw",
+        html: `
+          <p>Theoretical investigation of the selectivity of N- and O-donor extractant ligands (TODGA-type diglycolamides and BTBP-type bis-triazine-bipyridines) toward Am(III) over Eu(III) which are relevant to advanced solvent-extraction strategies for separating minor actinides from lanthanides in spent-nuclear-fuel reprocessing.</p>
+          <h3>What I contributed</h3>
+          <ul>
+            <li>Scalar-relativistic DFT (ZORA) calculations on Am(III) and Eu(III) complexes.</li>
+            <li>Energetics and free energies of complexation and partition between aqueous and organic phases.</li>
+            <li>Bonding analysis (NBO, QTAIM, Mulliken) to identify the electronic origin of selectivity differences.</li>
+          </ul>
+
+          <div class="link-row">
+            <a href="https://doi.org/10.1039/C4DT02657H" target="_blank" rel="noreferrer">Dalton Trans. 2015 (TODGA / BTBP selectivity)</a>
+          </div>
+        `
+      },
+    };
+
     function openProject(key) {
       const data = projectData[key];
+      if (!data) return;
+      document.getElementById('project-title').textContent = data.title;
+      document.getElementById('project-body').innerHTML = data.html;
+      openModal('project-modal');
+    }
+
+    function openCollab(key) {
+      const data = collabData[key];
       if (!data) return;
       document.getElementById('project-title').textContent = data.title;
       document.getElementById('project-body').innerHTML = data.html;
@@ -1099,7 +1331,7 @@ color: var(--text);
         if (!entry.isIntersecting) return;
         const id = entry.target.getAttribute('id');
         navLinks.forEach(a => a.classList.remove('active'));
-        const link = document.querySelector(`.nav-links a[href="#\${id}"]`);
+        const link = document.querySelector(`.nav-links a[href="#${id}"]`);
         if (link) link.classList.add('active');
       });
     }, { threshold: 0.55 });
@@ -1118,7 +1350,7 @@ color: var(--text);
     }, { threshold: 0.16 });
     fades.forEach(s => fadeObserver.observe(s));
   
-    // --- PROJECT CARD CLICK HANDLERS (avoid relying on inline onclick) ---
+    // --- PROJECT CARD CLICK HANDLERS ---
     document.querySelectorAll('.project[data-project]').forEach((card) => {
       const key = card.getAttribute('data-project');
       card.addEventListener('click', () => openProject(key));
@@ -1126,6 +1358,18 @@ color: var(--text);
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           openProject(key);
+        }
+      });
+    });
+
+    // --- COLLABORATION CARD CLICK HANDLERS ---
+    document.querySelectorAll('.project[data-collab]').forEach((card) => {
+      const key = card.getAttribute('data-collab');
+      card.addEventListener('click', () => openCollab(key));
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openCollab(key);
         }
       });
     });
